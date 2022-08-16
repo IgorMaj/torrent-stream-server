@@ -4,20 +4,23 @@ export class LogsStorage {
     logs: Models['Log'][] = []
     limit: number
 
-    constructor(options: {
-        limit: number
-    }) {
+    constructor(options: { limit: number }) {
         this.limit = options.limit
     }
 
     add(log: Models['Log']): void {
         this.logs = [
             log,
-            ...this.logs.filter(v => v.message !== log.message),
+            ...this.logs.filter((v) => v.message !== log.message),
         ].slice(0, this.limit)
     }
 
     get(): Models['Log'][] {
+        return this.logs
+    }
+
+    clear(): Models['Log'][] {
+        this.logs = []
         return this.logs
     }
 }

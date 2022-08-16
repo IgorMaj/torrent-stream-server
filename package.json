@@ -6,6 +6,13 @@
     "bin": {
         "torrent-stream-server": "lib/index.js"
     },
+    "pkg": {
+        "assets": [
+            "lib/**/*",
+            "frontend/build/**/*",
+            "openapi.yaml"
+        ]
+    },
     "bugs": {
         "url": "https://github.com/KiraLT/torrent-stream-server/issues"
     },
@@ -28,6 +35,7 @@
         "parse-torrent": "^9.1.4",
         "pump": "^3.0.0",
         "range-parser": "^1.2.1",
+        "srt-webvtt": "^2.0.0",
         "superagent": "^6.1.0",
         "swagger-ui-express": "^4.1.6",
         "webtorrent": "^1.5.5",
@@ -91,7 +99,7 @@
         "video",
         "video-stream"
     ],
-    "license": "MIT",
+    "license": "ISC",
     "main": "lib/index.js",
     "prettier": {
         "semi": false,
