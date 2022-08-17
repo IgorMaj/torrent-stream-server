@@ -57,6 +57,21 @@ export interface TorrentFileModel {
     streamZip: string
 }
 
+/**
+ * Check if a given object implements the TorrentFileModel interface.
+ */
+export function instanceOfTorrentFileModel(value: object): boolean {
+    let isInstance = true
+    isInstance = isInstance && 'name' in value
+    isInstance = isInstance && 'path' in value
+    isInstance = isInstance && 'type' in value
+    isInstance = isInstance && 'length' in value
+    isInstance = isInstance && 'stream' in value
+    isInstance = isInstance && 'streamZip' in value
+
+    return isInstance
+}
+
 export function TorrentFileModelFromJSON(json: any): TorrentFileModel {
     return TorrentFileModelFromJSONTyped(json, false)
 }

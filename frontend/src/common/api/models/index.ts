@@ -1,9 +1,11 @@
+/* tslint:disable */
+/* eslint-disable */
 export * from './ApiErrorModel'
-export * from './InlineResponse200'
+export * from './GetProviders200Response'
 export * from './Log'
 export * from './MagnetModel'
 export * from './ProviderCategoryModel'
-export * from './ProviderCategoryModelSubcategories'
+export * from './ProviderCategoryModelSubcategoriesInner'
 export * from './ProviderErrorModel'
 export * from './ProviderModel'
 export * from './ProviderTorrentModel'

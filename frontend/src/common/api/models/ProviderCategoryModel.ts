@@ -13,12 +13,12 @@
  */
 
 import { exists, mapValues } from '../runtime'
+import type { ProviderCategoryModelSubcategoriesInner } from './ProviderCategoryModelSubcategoriesInner'
 import {
-    ProviderCategoryModelSubcategories,
-    ProviderCategoryModelSubcategoriesFromJSON,
-    ProviderCategoryModelSubcategoriesFromJSONTyped,
-    ProviderCategoryModelSubcategoriesToJSON,
-} from './'
+    ProviderCategoryModelSubcategoriesInnerFromJSON,
+    ProviderCategoryModelSubcategoriesInnerFromJSONTyped,
+    ProviderCategoryModelSubcategoriesInnerToJSON,
+} from './ProviderCategoryModelSubcategoriesInner'
 
 /**
  *
@@ -40,10 +40,22 @@ export interface ProviderCategoryModel {
     id: string
     /**
      *
-     * @type {Array<ProviderCategoryModelSubcategories>}
+     * @type {Array<ProviderCategoryModelSubcategoriesInner>}
      * @memberof ProviderCategoryModel
      */
-    subcategories: Array<ProviderCategoryModelSubcategories>
+    subcategories: Array<ProviderCategoryModelSubcategoriesInner>
+}
+
+/**
+ * Check if a given object implements the ProviderCategoryModel interface.
+ */
+export function instanceOfProviderCategoryModel(value: object): boolean {
+    let isInstance = true
+    isInstance = isInstance && 'name' in value
+    isInstance = isInstance && 'id' in value
+    isInstance = isInstance && 'subcategories' in value
+
+    return isInstance
 }
 
 export function ProviderCategoryModelFromJSON(
@@ -63,7 +75,7 @@ export function ProviderCategoryModelFromJSONTyped(
         name: json['name'],
         id: json['id'],
         subcategories: (json['subcategories'] as Array<any>).map(
-            ProviderCategoryModelSubcategoriesFromJSON
+            ProviderCategoryModelSubcategoriesInnerFromJSON
         ),
     }
 }
@@ -81,7 +93,7 @@ export function ProviderCategoryModelToJSON(
         name: value.name,
         id: value.id,
         subcategories: (value.subcategories as Array<any>).map(
-            ProviderCategoryModelSubcategoriesToJSON
+            ProviderCategoryModelSubcategoriesInnerToJSON
         ),
     }
 }

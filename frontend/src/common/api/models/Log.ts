@@ -14,19 +14,19 @@
 
 import { exists, mapValues } from '../runtime'
 /**
- *
+ * Server log entry
  * @export
  * @interface Log
  */
 export interface Log {
     /**
-     *
+     * Log message
      * @type {string}
      * @memberof Log
      */
     message: string
     /**
-     *
+     * Log timestamp in seconds
      * @type {number}
      * @memberof Log
      */
@@ -41,13 +41,25 @@ export interface Log {
 
 /**
  * @export
- * @enum {string}
  */
-export enum LogLevelEnum {
-    Debug = 'debug',
-    Info = 'info',
-    Warn = 'warn',
-    Error = 'error',
+export const LogLevelEnum = {
+    Debug: 'debug',
+    Info: 'info',
+    Warn: 'warn',
+    Error: 'error',
+} as const
+export type LogLevelEnum = typeof LogLevelEnum[keyof typeof LogLevelEnum]
+
+/**
+ * Check if a given object implements the Log interface.
+ */
+export function instanceOfLog(value: object): boolean {
+    let isInstance = true
+    isInstance = isInstance && 'message' in value
+    isInstance = isInstance && 'time' in value
+    isInstance = isInstance && 'level' in value
+
+    return isInstance
 }
 
 export function LogFromJSON(json: any): Log {

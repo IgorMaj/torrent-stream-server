@@ -13,12 +13,12 @@
  */
 
 import { exists, mapValues } from '../runtime'
+import type { ProviderCategoryModelSubcategoriesInner } from './ProviderCategoryModelSubcategoriesInner'
 import {
-    ProviderCategoryModelSubcategories,
-    ProviderCategoryModelSubcategoriesFromJSON,
-    ProviderCategoryModelSubcategoriesFromJSONTyped,
-    ProviderCategoryModelSubcategoriesToJSON,
-} from './'
+    ProviderCategoryModelSubcategoriesInnerFromJSON,
+    ProviderCategoryModelSubcategoriesInnerFromJSONTyped,
+    ProviderCategoryModelSubcategoriesInnerToJSON,
+} from './ProviderCategoryModelSubcategoriesInner'
 
 /**
  *
@@ -112,10 +112,25 @@ export interface ProviderTorrentModel {
     provider: string
     /**
      *
-     * @type {ProviderCategoryModelSubcategories}
+     * @type {ProviderCategoryModelSubcategoriesInner}
      * @memberof ProviderTorrentModel
      */
-    category?: ProviderCategoryModelSubcategories
+    category?: ProviderCategoryModelSubcategoriesInner
+}
+
+/**
+ * Check if a given object implements the ProviderTorrentModel interface.
+ */
+export function instanceOfProviderTorrentModel(value: object): boolean {
+    let isInstance = true
+    isInstance = isInstance && 'id' in value
+    isInstance = isInstance && 'name' in value
+    isInstance = isInstance && 'seeds' in value
+    isInstance = isInstance && 'peers' in value
+    isInstance = isInstance && 'size' in value
+    isInstance = isInstance && 'provider' in value
+
+    return isInstance
 }
 
 export function ProviderTorrentModelFromJSON(json: any): ProviderTorrentModel {
@@ -146,7 +161,7 @@ export function ProviderTorrentModelFromJSONTyped(
         provider: json['provider'],
         category: !exists(json, 'category')
             ? undefined
-            : ProviderCategoryModelSubcategoriesFromJSON(json['category']),
+            : ProviderCategoryModelSubcategoriesInnerFromJSON(json['category']),
     }
 }
 
@@ -174,6 +189,6 @@ export function ProviderTorrentModelToJSON(
         imdb: value.imdb,
         numFiles: value.numFiles,
         provider: value.provider,
-        category: ProviderCategoryModelSubcategoriesToJSON(value.category),
+        category: ProviderCategoryModelSubcategoriesInnerToJSON(value.category),
     }
 }

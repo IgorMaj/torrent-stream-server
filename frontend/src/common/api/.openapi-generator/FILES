@@ -6,11 +6,11 @@ apis/TorrentsApi.ts
 apis/index.ts
 index.ts
 models/ApiErrorModel.ts
-models/InlineResponse200.ts
+models/GetProviders200Response.ts
 models/Log.ts
 models/MagnetModel.ts
 models/ProviderCategoryModel.ts
-models/ProviderCategoryModelSubcategories.ts
+models/ProviderCategoryModelSubcategoriesInner.ts
 models/ProviderErrorModel.ts
 models/ProviderModel.ts
 models/ProviderTorrentModel.ts

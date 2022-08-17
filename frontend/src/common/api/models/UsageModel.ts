@@ -39,6 +39,18 @@ export interface UsageModel {
     usedTorrentSpace: number
 }
 
+/**
+ * Check if a given object implements the UsageModel interface.
+ */
+export function instanceOfUsageModel(value: object): boolean {
+    let isInstance = true
+    isInstance = isInstance && 'totalDiskSpace' in value
+    isInstance = isInstance && 'freeDiskSpace' in value
+    isInstance = isInstance && 'usedTorrentSpace' in value
+
+    return isInstance
+}
+
 export function UsageModelFromJSON(json: any): UsageModel {
     return UsageModelFromJSONTyped(json, false)
 }

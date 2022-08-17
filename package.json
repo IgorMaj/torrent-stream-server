@@ -46,7 +46,7 @@
         "zod": "^3.9.1"
     },
     "devDependencies": {
-        "@openapitools/openapi-generator-cli": "^2.4.5",
+        "@openapitools/openapi-generator-cli": "^2.5.1",
         "@types/archiver": "^5.1.1",
         "@types/cheerio": "^0.22.30",
         "@types/cors": "^2.8.12",

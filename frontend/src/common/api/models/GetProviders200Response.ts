@@ -19,37 +19,37 @@ import {
     ProviderErrorModelFromJSONTyped,
     ProviderErrorModelToJSON,
 } from './ProviderErrorModel'
-import type { ProviderTorrentModel } from './ProviderTorrentModel'
+import type { ProviderModel } from './ProviderModel'
 import {
-    ProviderTorrentModelFromJSON,
-    ProviderTorrentModelFromJSONTyped,
-    ProviderTorrentModelToJSON,
-} from './ProviderTorrentModel'
+    ProviderModelFromJSON,
+    ProviderModelFromJSONTyped,
+    ProviderModelToJSON,
+} from './ProviderModel'
 
 /**
  *
  * @export
- * @interface SearchResultsModel
+ * @interface GetProviders200Response
  */
-export interface SearchResultsModel {
+export interface GetProviders200Response {
     /**
      *
-     * @type {Array<ProviderTorrentModel>}
-     * @memberof SearchResultsModel
+     * @type {Array<ProviderModel>}
+     * @memberof GetProviders200Response
      */
-    items: Array<ProviderTorrentModel>
+    items: Array<ProviderModel>
     /**
      *
      * @type {Array<ProviderErrorModel>}
-     * @memberof SearchResultsModel
+     * @memberof GetProviders200Response
      */
     errors: Array<ProviderErrorModel>
 }
 
 /**
- * Check if a given object implements the SearchResultsModel interface.
+ * Check if a given object implements the GetProviders200Response interface.
  */
-export function instanceOfSearchResultsModel(value: object): boolean {
+export function instanceOfGetProviders200Response(value: object): boolean {
     let isInstance = true
     isInstance = isInstance && 'items' in value
     isInstance = isInstance && 'errors' in value
@@ -57,25 +57,27 @@ export function instanceOfSearchResultsModel(value: object): boolean {
     return isInstance
 }
 
-export function SearchResultsModelFromJSON(json: any): SearchResultsModel {
-    return SearchResultsModelFromJSONTyped(json, false)
+export function GetProviders200ResponseFromJSON(
+    json: any
+): GetProviders200Response {
+    return GetProviders200ResponseFromJSONTyped(json, false)
 }
 
-export function SearchResultsModelFromJSONTyped(
+export function GetProviders200ResponseFromJSONTyped(
     json: any,
     ignoreDiscriminator: boolean
-): SearchResultsModel {
+): GetProviders200Response {
     if (json === undefined || json === null) {
         return json
     }
     return {
-        items: (json['items'] as Array<any>).map(ProviderTorrentModelFromJSON),
+        items: (json['items'] as Array<any>).map(ProviderModelFromJSON),
         errors: (json['errors'] as Array<any>).map(ProviderErrorModelFromJSON),
     }
 }
 
-export function SearchResultsModelToJSON(
-    value?: SearchResultsModel | null
+export function GetProviders200ResponseToJSON(
+    value?: GetProviders200Response | null
 ): any {
     if (value === undefined) {
         return undefined
@@ -84,7 +86,7 @@ export function SearchResultsModelToJSON(
         return null
     }
     return {
-        items: (value.items as Array<any>).map(ProviderTorrentModelToJSON),
+        items: (value.items as Array<any>).map(ProviderModelToJSON),
         errors: (value.errors as Array<any>).map(ProviderErrorModelToJSON),
     }
 }

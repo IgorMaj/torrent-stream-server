@@ -9,7 +9,7 @@ paths:
             tags:
                 - auth
             security:
-            - apiKey: []
+                - apiKey: []
             responses:
                 200:
                     description: OK
@@ -27,7 +27,7 @@ paths:
             tags:
                 - dashboard
             security:
-            - apiKey: []
+                - apiKey: []
             responses:
                 200:
                     description: OK
@@ -45,7 +45,7 @@ paths:
             tags:
                 - torrents
             security:
-            - apiKey: []
+                - apiKey: []
             responses:
                 200:
                     description: OK
@@ -72,7 +72,7 @@ paths:
                   schema:
                       type: string
             security:
-            - apiKey: []
+                - apiKey: []
             responses:
                 200:
                     description: OK
@@ -87,6 +87,22 @@ paths:
                 403:
                     $ref: '#/components/responses/403'
     /api/torrents/{infoHash}:
+        delete:
+            operationId: deleteTorrent
+            tags:
+                - torrents
+            parameters:
+                - in: path
+                  name: infoHash
+                  description: torrent info hash
+                  required: true
+                  schema:
+                      type: string
+            security:
+                - apiKey: []
+            responses:
+                200:
+                    $ref: '#/components/responses/200'
         get:
             operationId: getTorrent
             tags:
@@ -99,7 +115,7 @@ paths:
                   schema:
                       type: string
             security:
-            - apiKey: []
+                - apiKey: []
             responses:
                 200:
                     description: OK
@@ -229,7 +245,7 @@ paths:
             tags:
                 - browse
             security:
-            - apiKey: []
+                - apiKey: []
             responses:
                 200:
                     description: OK
@@ -270,7 +286,7 @@ paths:
                   schema:
                       type: string
             security:
-            - apiKey: []
+                - apiKey: []
             responses:
                 200:
                     description: OK
@@ -304,7 +320,7 @@ paths:
                   schema:
                       type: array
                       items:
-                        type: string
+                          type: string
                 - in: query
                   name: category
                   description: provider category
@@ -312,7 +328,7 @@ paths:
                   schema:
                       type: string
             security:
-            - apiKey: []
+                - apiKey: []
             responses:
                 200:
                     description: OK
@@ -320,7 +336,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/SearchResultsModel'
-                                    
+
                 400:
                     $ref: '#/components/responses/400'
                 401:
@@ -330,11 +346,11 @@ paths:
     /api/logs:
         get:
             operationId: getLogs
-            summary: "Retrieve latest server logs"
+            summary: 'Retrieve latest server logs'
             tags:
                 - dashboard
             security:
-            - apiKey: []
+                - apiKey: []
             responses:
                 200:
                     description: OK
@@ -344,7 +360,7 @@ paths:
                                 type: array
                                 items:
                                     $ref: '#/components/schemas/Log'
-                                    
+
                 400:
                     $ref: '#/components/responses/400'
                 401:
@@ -433,7 +449,19 @@ components:
                     type: string
                 streamZip:
                     type: string
-            required: ['link', 'infoHash', 'name', 'started', 'updated', 'files', 'downloaded', 'downloadSpeed', 'playlist', 'streamZip']
+            required:
+                [
+                    'link',
+                    'infoHash',
+                    'name',
+                    'started',
+                    'updated',
+                    'files',
+                    'downloaded',
+                    'downloadSpeed',
+                    'playlist',
+                    'streamZip',
+                ]
         TorrentFileModel:
             type: object
             properties:
@@ -571,6 +599,8 @@ components:
                     enum: ['debug', 'info', 'warn', 'error']
             required: ['message', 'time', 'level']
     responses:
+        200:
+            description: Ok
         204:
             description: Successful operation
         400:

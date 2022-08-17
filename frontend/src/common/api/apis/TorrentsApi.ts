@@ -13,17 +13,20 @@
  */
 
 import * as runtime from '../runtime'
+import type { ApiErrorModel, TorrentModel } from '../models'
 import {
-    ApiErrorModel,
     ApiErrorModelFromJSON,
     ApiErrorModelToJSON,
-    TorrentModel,
     TorrentModelFromJSON,
     TorrentModelToJSON,
 } from '../models'
 
 export interface CreateTorrentRequest {
     torrent: string
+}
+
+export interface DeleteTorrentRequest {
+    infoHash: string
 }
 
 export interface GetTorrentRequest {
@@ -37,7 +40,8 @@ export class TorrentsApi extends runtime.BaseAPI {
     /**
      */
     async createTorrentRaw(
-        requestParameters: CreateTorrentRequest
+        requestParameters: CreateTorrentRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction
     ): Promise<runtime.ApiResponse<TorrentModel>> {
         if (
             requestParameters.torrent === null ||
@@ -59,19 +63,21 @@ export class TorrentsApi extends runtime.BaseAPI {
 
         if (this.configuration && this.configuration.accessToken) {
             const token = this.configuration.accessToken
-            const tokenString =
-                typeof token === 'function' ? token('apiKey', []) : token
+            const tokenString = await token('apiKey', [])
 
             if (tokenString) {
                 headerParameters['Authorization'] = `Bearer ${tokenString}`
             }
         }
-        const response = await this.request({
-            path: `/api/torrents`,
-            method: 'POST',
-            headers: headerParameters,
-            query: queryParameters,
-        })
+        const response = await this.request(
+            {
+                path: `/api/torrents`,
+                method: 'POST',
+                headers: headerParameters,
+                query: queryParameters,
+            },
+            initOverrides
+        )
 
         return new runtime.JSONApiResponse(response, (jsonValue) =>
             TorrentModelFromJSON(jsonValue)
@@ -81,16 +87,74 @@ export class TorrentsApi extends runtime.BaseAPI {
     /**
      */
     async createTorrent(
-        requestParameters: CreateTorrentRequest
+        requestParameters: CreateTorrentRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction
     ): Promise<TorrentModel> {
-        const response = await this.createTorrentRaw(requestParameters)
+        const response = await this.createTorrentRaw(
+            requestParameters,
+            initOverrides
+        )
         return await response.value()
     }
 
     /**
      */
+    async deleteTorrentRaw(
+        requestParameters: DeleteTorrentRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction
+    ): Promise<runtime.ApiResponse<void>> {
+        if (
+            requestParameters.infoHash === null ||
+            requestParameters.infoHash === undefined
+        ) {
+            throw new runtime.RequiredError(
+                'infoHash',
+                'Required parameter requestParameters.infoHash was null or undefined when calling deleteTorrent.'
+            )
+        }
+
+        const queryParameters: any = {}
+
+        const headerParameters: runtime.HTTPHeaders = {}
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken
+            const tokenString = await token('apiKey', [])
+
+            if (tokenString) {
+                headerParameters['Authorization'] = `Bearer ${tokenString}`
+            }
+        }
+        const response = await this.request(
+            {
+                path: `/api/torrents/{infoHash}`.replace(
+                    `{${'infoHash'}}`,
+                    encodeURIComponent(String(requestParameters.infoHash))
+                ),
+                method: 'DELETE',
+                headers: headerParameters,
+                query: queryParameters,
+            },
+            initOverrides
+        )
+
+        return new runtime.VoidApiResponse(response)
+    }
+
+    /**
+     */
+    async deleteTorrent(
+        requestParameters: DeleteTorrentRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction
+    ): Promise<void> {
+        await this.deleteTorrentRaw(requestParameters, initOverrides)
+    }
+
+    /**
+     */
     async getTorrentRaw(
-        requestParameters: GetTorrentRequest
+        requestParameters: GetTorrentRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction
     ): Promise<runtime.ApiResponse<TorrentModel>> {
         if (
             requestParameters.infoHash === null ||
@@ -108,22 +172,24 @@ export class TorrentsApi extends runtime.BaseAPI {
 
         if (this.configuration && this.configuration.accessToken) {
             const token = this.configuration.accessToken
-            const tokenString =
-                typeof token === 'function' ? token('apiKey', []) : token
+            const tokenString = await token('apiKey', [])
 
             if (tokenString) {
                 headerParameters['Authorization'] = `Bearer ${tokenString}`
             }
         }
-        const response = await this.request({
-            path: `/api/torrents/{infoHash}`.replace(
-                `{${'infoHash'}}`,
-                encodeURIComponent(String(requestParameters.infoHash))
-            ),
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        })
+        const response = await this.request(
+            {
+                path: `/api/torrents/{infoHash}`.replace(
+                    `{${'infoHash'}}`,
+                    encodeURIComponent(String(requestParameters.infoHash))
+                ),
+                method: 'GET',
+                headers: headerParameters,
+                query: queryParameters,
+            },
+            initOverrides
+        )
 
         return new runtime.JSONApiResponse(response, (jsonValue) =>
             TorrentModelFromJSON(jsonValue)
@@ -133,34 +199,42 @@ export class TorrentsApi extends runtime.BaseAPI {
     /**
      */
     async getTorrent(
-        requestParameters: GetTorrentRequest
+        requestParameters: GetTorrentRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction
     ): Promise<TorrentModel> {
-        const response = await this.getTorrentRaw(requestParameters)
+        const response = await this.getTorrentRaw(
+            requestParameters,
+            initOverrides
+        )
         return await response.value()
     }
 
     /**
      */
-    async getTorrentsRaw(): Promise<runtime.ApiResponse<Array<TorrentModel>>> {
+    async getTorrentsRaw(
+        initOverrides?: RequestInit | runtime.InitOverrideFunction
+    ): Promise<runtime.ApiResponse<Array<TorrentModel>>> {
         const queryParameters: any = {}
 
         const headerParameters: runtime.HTTPHeaders = {}
 
         if (this.configuration && this.configuration.accessToken) {
             const token = this.configuration.accessToken
-            const tokenString =
-                typeof token === 'function' ? token('apiKey', []) : token
+            const tokenString = await token('apiKey', [])
 
             if (tokenString) {
                 headerParameters['Authorization'] = `Bearer ${tokenString}`
             }
         }
-        const response = await this.request({
-            path: `/api/torrents`,
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        })
+        const response = await this.request(
+            {
+                path: `/api/torrents`,
+                method: 'GET',
+                headers: headerParameters,
+                query: queryParameters,
+            },
+            initOverrides
+        )
 
         return new runtime.JSONApiResponse(response, (jsonValue) =>
             jsonValue.map(TorrentModelFromJSON)
@@ -169,8 +243,10 @@ export class TorrentsApi extends runtime.BaseAPI {
 
     /**
      */
-    async getTorrents(): Promise<Array<TorrentModel>> {
-        const response = await this.getTorrentsRaw()
+    async getTorrents(
+        initOverrides?: RequestInit | runtime.InitOverrideFunction
+    ): Promise<Array<TorrentModel>> {
+        const response = await this.getTorrentsRaw(initOverrides)
         return await response.value()
     }
 }

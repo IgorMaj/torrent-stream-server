@@ -33,6 +33,17 @@ export interface ProviderErrorModel {
     provider: string
 }
 
+/**
+ * Check if a given object implements the ProviderErrorModel interface.
+ */
+export function instanceOfProviderErrorModel(value: object): boolean {
+    let isInstance = true
+    isInstance = isInstance && 'error' in value
+    isInstance = isInstance && 'provider' in value
+
+    return isInstance
+}
+
 export function ProviderErrorModelFromJSON(json: any): ProviderErrorModel {
     return ProviderErrorModelFromJSONTyped(json, false)
 }

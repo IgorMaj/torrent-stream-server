@@ -13,14 +13,12 @@
  */
 
 import * as runtime from '../runtime'
+import type { ApiErrorModel, Log, UsageModel } from '../models'
 import {
-    ApiErrorModel,
     ApiErrorModelFromJSON,
     ApiErrorModelToJSON,
-    Log,
     LogFromJSON,
     LogToJSON,
-    UsageModel,
     UsageModelFromJSON,
     UsageModelToJSON,
 } from '../models'
@@ -30,27 +28,32 @@ import {
  */
 export class DashboardApi extends runtime.BaseAPI {
     /**
+     * Retrieve latest server logs
      */
-    async getLogsRaw(): Promise<runtime.ApiResponse<Array<Log>>> {
+    async getLogsRaw(
+        initOverrides?: RequestInit | runtime.InitOverrideFunction
+    ): Promise<runtime.ApiResponse<Array<Log>>> {
         const queryParameters: any = {}
 
         const headerParameters: runtime.HTTPHeaders = {}
 
         if (this.configuration && this.configuration.accessToken) {
             const token = this.configuration.accessToken
-            const tokenString =
-                typeof token === 'function' ? token('apiKey', []) : token
+            const tokenString = await token('apiKey', [])
 
             if (tokenString) {
                 headerParameters['Authorization'] = `Bearer ${tokenString}`
             }
         }
-        const response = await this.request({
-            path: `/api/logs`,
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        })
+        const response = await this.request(
+            {
+                path: `/api/logs`,
+                method: 'GET',
+                headers: headerParameters,
+                query: queryParameters,
+            },
+            initOverrides
+        )
 
         return new runtime.JSONApiResponse(response, (jsonValue) =>
             jsonValue.map(LogFromJSON)
@@ -58,34 +61,41 @@ export class DashboardApi extends runtime.BaseAPI {
     }
 
     /**
+     * Retrieve latest server logs
      */
-    async getLogs(): Promise<Array<Log>> {
-        const response = await this.getLogsRaw()
+    async getLogs(
+        initOverrides?: RequestInit | runtime.InitOverrideFunction
+    ): Promise<Array<Log>> {
+        const response = await this.getLogsRaw(initOverrides)
         return await response.value()
     }
 
     /**
      */
-    async getUsageRaw(): Promise<runtime.ApiResponse<UsageModel>> {
+    async getUsageRaw(
+        initOverrides?: RequestInit | runtime.InitOverrideFunction
+    ): Promise<runtime.ApiResponse<UsageModel>> {
         const queryParameters: any = {}
 
         const headerParameters: runtime.HTTPHeaders = {}
 
         if (this.configuration && this.configuration.accessToken) {
             const token = this.configuration.accessToken
-            const tokenString =
-                typeof token === 'function' ? token('apiKey', []) : token
+            const tokenString = await token('apiKey', [])
 
             if (tokenString) {
                 headerParameters['Authorization'] = `Bearer ${tokenString}`
             }
         }
-        const response = await this.request({
-            path: `/api/usage`,
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        })
+        const response = await this.request(
+            {
+                path: `/api/usage`,
+                method: 'GET',
+                headers: headerParameters,
+                query: queryParameters,
+            },
+            initOverrides
+        )
 
         return new runtime.JSONApiResponse(response, (jsonValue) =>
             UsageModelFromJSON(jsonValue)
@@ -94,8 +104,10 @@ export class DashboardApi extends runtime.BaseAPI {
 
     /**
      */
-    async getUsage(): Promise<UsageModel> {
-        const response = await this.getUsageRaw()
+    async getUsage(
+        initOverrides?: RequestInit | runtime.InitOverrideFunction
+    ): Promise<UsageModel> {
+        const response = await this.getUsageRaw(initOverrides)
         return await response.value()
     }
 }

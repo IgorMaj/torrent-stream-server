@@ -27,6 +27,16 @@ export interface ApiErrorModel {
     error: string
 }
 
+/**
+ * Check if a given object implements the ApiErrorModel interface.
+ */
+export function instanceOfApiErrorModel(value: object): boolean {
+    let isInstance = true
+    isInstance = isInstance && 'error' in value
+
+    return isInstance
+}
+
 export function ApiErrorModelFromJSON(json: any): ApiErrorModel {
     return ApiErrorModelFromJSONTyped(json, false)
 }

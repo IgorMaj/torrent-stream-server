@@ -13,12 +13,12 @@
  */
 
 import { exists, mapValues } from '../runtime'
+import type { TorrentFileModel } from './TorrentFileModel'
 import {
-    TorrentFileModel,
     TorrentFileModelFromJSON,
     TorrentFileModelFromJSONTyped,
     TorrentFileModelToJSON,
-} from './'
+} from './TorrentFileModel'
 
 /**
  *
@@ -86,6 +86,25 @@ export interface TorrentModel {
      * @memberof TorrentModel
      */
     streamZip: string
+}
+
+/**
+ * Check if a given object implements the TorrentModel interface.
+ */
+export function instanceOfTorrentModel(value: object): boolean {
+    let isInstance = true
+    isInstance = isInstance && 'link' in value
+    isInstance = isInstance && 'infoHash' in value
+    isInstance = isInstance && 'name' in value
+    isInstance = isInstance && 'started' in value
+    isInstance = isInstance && 'updated' in value
+    isInstance = isInstance && 'files' in value
+    isInstance = isInstance && 'downloaded' in value
+    isInstance = isInstance && 'downloadSpeed' in value
+    isInstance = isInstance && 'playlist' in value
+    isInstance = isInstance && 'streamZip' in value
+
+    return isInstance
 }
 
 export function TorrentModelFromJSON(json: any): TorrentModel {

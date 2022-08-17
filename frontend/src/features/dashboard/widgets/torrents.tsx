@@ -4,7 +4,7 @@ import { useGlobal } from 'reactn'
 import { Card, Alert, ListGroup, Row, Col, Button } from 'react-bootstrap'
 import { formatBytes } from 'common-stuff'
 
-import { TorrentsApi } from 'common/api'
+import { TorrentModel, TorrentsApi } from 'common/api'
 import { ResultContainer } from 'common/layout'
 import { formatDate } from 'common/utils'
 import { useAsync } from 'common/hooks'
@@ -21,6 +21,12 @@ export function ActiveTorrentsWidget(): JSX.Element {
         }
     )
 
+    const deleteTorrent = (torrent: TorrentModel) => {
+        return new TorrentsApi(getApiConfig({ bearer })).deleteTorrent({
+            infoHash: torrent.infoHash,
+        })
+    }
+
     return (
         <ResultContainer result={torrents}>
             {(result) => (
@@ -34,9 +40,11 @@ export function ActiveTorrentsWidget(): JSX.Element {
                         </Card.Header>
                         <Card.Body>
                             <ListGroup variant="flush">
-                                {result.length === 0 && <Alert variant="warning">
-                                    No active torrents at the moment
-                                </Alert>}
+                                {result.length === 0 && (
+                                    <Alert variant="warning">
+                                        No active torrents at the moment
+                                    </Alert>
+                                )}
                                 {result.map((torrent) => (
                                     <ListGroup.Item
                                         key={torrent.infoHash}
@@ -48,10 +56,7 @@ export function ActiveTorrentsWidget(): JSX.Element {
                                                     {torrent.name}
                                                 </span>
                                             </Col>
-                                            <Col
-                                                lg={4}
-                                                className="d-flex mb-2"
-                                            >
+                                            <Col lg={4} className="d-flex mb-2">
                                                 <Row className="justify-content-center align-self-center w-100">
                                                     <Col className="d-flex pr-2 pl-2">
                                                         <span className="justify-content-center align-self-center">
@@ -78,8 +83,11 @@ export function ActiveTorrentsWidget(): JSX.Element {
                                                             )}
                                                         </span>
                                                     </Col>
-                                                    <Col className="d-flex pr-2 pl-2">
-                                                        <span className="justify-content-center align-self-center ml-auto">
+                                                    <Col
+                                                        sm="auto"
+                                                        className="d-flex mb-2"
+                                                    >
+                                                        <span className="justify-content-end align-self-center ml-auto">
                                                             <Button
                                                                 as={Link}
                                                                 to={`/play?torrent=${encodeURIComponent(
@@ -88,6 +96,17 @@ export function ActiveTorrentsWidget(): JSX.Element {
                                                                 variant="success"
                                                                 className="ti-control-play pr-4 pl-4"
                                                             ></Button>
+                                                            <Button
+                                                                className="ti-close ml-1 pr-4 pl-4"
+                                                                variant="warning"
+                                                                onClick={() => {
+                                                                    deleteTorrent(
+                                                                        torrent
+                                                                    )
+                                                                }}
+                                                            >
+                                                                {' '}
+                                                            </Button>
                                                         </span>
                                                     </Col>
                                                 </Row>

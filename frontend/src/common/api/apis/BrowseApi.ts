@@ -13,17 +13,19 @@
  */
 
 import * as runtime from '../runtime'
-import {
+import type {
     ApiErrorModel,
+    GetProviders200Response,
+    MagnetModel,
+    SearchResultsModel,
+} from '../models'
+import {
     ApiErrorModelFromJSON,
     ApiErrorModelToJSON,
-    InlineResponse200,
-    InlineResponse200FromJSON,
-    InlineResponse200ToJSON,
-    MagnetModel,
+    GetProviders200ResponseFromJSON,
+    GetProviders200ResponseToJSON,
     MagnetModelFromJSON,
     MagnetModelToJSON,
-    SearchResultsModel,
     SearchResultsModelFromJSON,
     SearchResultsModelToJSON,
 } from '../models'
@@ -46,7 +48,8 @@ export class BrowseApi extends runtime.BaseAPI {
     /**
      */
     async getMagnetRaw(
-        requestParameters: GetMagnetRequest
+        requestParameters: GetMagnetRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction
     ): Promise<runtime.ApiResponse<MagnetModel>> {
         if (
             requestParameters.provider === null ||
@@ -74,27 +77,29 @@ export class BrowseApi extends runtime.BaseAPI {
 
         if (this.configuration && this.configuration.accessToken) {
             const token = this.configuration.accessToken
-            const tokenString =
-                typeof token === 'function' ? token('apiKey', []) : token
+            const tokenString = await token('apiKey', [])
 
             if (tokenString) {
                 headerParameters['Authorization'] = `Bearer ${tokenString}`
             }
         }
-        const response = await this.request({
-            path: `/api/browse/providers/{provider}/magnet/{torrentId}`
-                .replace(
-                    `{${'provider'}}`,
-                    encodeURIComponent(String(requestParameters.provider))
-                )
-                .replace(
-                    `{${'torrentId'}}`,
-                    encodeURIComponent(String(requestParameters.torrentId))
-                ),
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        })
+        const response = await this.request(
+            {
+                path: `/api/browse/providers/{provider}/magnet/{torrentId}`
+                    .replace(
+                        `{${'provider'}}`,
+                        encodeURIComponent(String(requestParameters.provider))
+                    )
+                    .replace(
+                        `{${'torrentId'}}`,
+                        encodeURIComponent(String(requestParameters.torrentId))
+                    ),
+                method: 'GET',
+                headers: headerParameters,
+                query: queryParameters,
+            },
+            initOverrides
+        )
 
         return new runtime.JSONApiResponse(response, (jsonValue) =>
             MagnetModelFromJSON(jsonValue)
@@ -103,50 +108,63 @@ export class BrowseApi extends runtime.BaseAPI {
 
     /**
      */
-    async getMagnet(requestParameters: GetMagnetRequest): Promise<MagnetModel> {
-        const response = await this.getMagnetRaw(requestParameters)
+    async getMagnet(
+        requestParameters: GetMagnetRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction
+    ): Promise<MagnetModel> {
+        const response = await this.getMagnetRaw(
+            requestParameters,
+            initOverrides
+        )
         return await response.value()
     }
 
     /**
      */
-    async getProvidersRaw(): Promise<runtime.ApiResponse<InlineResponse200>> {
+    async getProvidersRaw(
+        initOverrides?: RequestInit | runtime.InitOverrideFunction
+    ): Promise<runtime.ApiResponse<GetProviders200Response>> {
         const queryParameters: any = {}
 
         const headerParameters: runtime.HTTPHeaders = {}
 
         if (this.configuration && this.configuration.accessToken) {
             const token = this.configuration.accessToken
-            const tokenString =
-                typeof token === 'function' ? token('apiKey', []) : token
+            const tokenString = await token('apiKey', [])
 
             if (tokenString) {
                 headerParameters['Authorization'] = `Bearer ${tokenString}`
             }
         }
-        const response = await this.request({
-            path: `/api/browse/providers`,
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        })
+        const response = await this.request(
+            {
+                path: `/api/browse/providers`,
+                method: 'GET',
+                headers: headerParameters,
+                query: queryParameters,
+            },
+            initOverrides
+        )
 
         return new runtime.JSONApiResponse(response, (jsonValue) =>
-            InlineResponse200FromJSON(jsonValue)
+            GetProviders200ResponseFromJSON(jsonValue)
         )
     }
 
     /**
      */
-    async getProviders(): Promise<InlineResponse200> {
-        const response = await this.getProvidersRaw()
+    async getProviders(
+        initOverrides?: RequestInit | runtime.InitOverrideFunction
+    ): Promise<GetProviders200Response> {
+        const response = await this.getProvidersRaw(initOverrides)
         return await response.value()
     }
 
     /**
      */
     async searchTorrentsRaw(
-        requestParameters: SearchTorrentsRequest
+        requestParameters: SearchTorrentsRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction
     ): Promise<runtime.ApiResponse<SearchResultsModel>> {
         if (
             requestParameters.query === null ||
@@ -176,19 +194,21 @@ export class BrowseApi extends runtime.BaseAPI {
 
         if (this.configuration && this.configuration.accessToken) {
             const token = this.configuration.accessToken
-            const tokenString =
-                typeof token === 'function' ? token('apiKey', []) : token
+            const tokenString = await token('apiKey', [])
 
             if (tokenString) {
                 headerParameters['Authorization'] = `Bearer ${tokenString}`
             }
         }
-        const response = await this.request({
-            path: `/api/browse/search`,
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        })
+        const response = await this.request(
+            {
+                path: `/api/browse/search`,
+                method: 'GET',
+                headers: headerParameters,
+                query: queryParameters,
+            },
+            initOverrides
+        )
 
         return new runtime.JSONApiResponse(response, (jsonValue) =>
             SearchResultsModelFromJSON(jsonValue)
@@ -198,9 +218,13 @@ export class BrowseApi extends runtime.BaseAPI {
     /**
      */
     async searchTorrents(
-        requestParameters: SearchTorrentsRequest
+        requestParameters: SearchTorrentsRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction
     ): Promise<SearchResultsModel> {
-        const response = await this.searchTorrentsRaw(requestParameters)
+        const response = await this.searchTorrentsRaw(
+            requestParameters,
+            initOverrides
+        )
         return await response.value()
     }
 }

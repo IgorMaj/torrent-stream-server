@@ -41,9 +41,7 @@ const torrentToJson = (
     }
 }
 
-export function getTorrentsRouter(
-    { config, client }: Globals,
-): Route[] {
+export function getTorrentsRouter({ config, client }: Globals): Route[] {
     const encodeToken = config.security.streamApi.key || config.security.apiKey
 
     return [
@@ -74,6 +72,11 @@ export function getTorrentsRouter(
             }
 
             throw new HttpError(HttpStatusCodes.NOT_FOUND)
+        }),
+        createRoute('deleteTorrent', (req, res) => {
+            const { infoHash } = req.params
+            client.removeTorrent(infoHash)
+            throw new HttpError(HttpStatusCodes.OK)
         }),
     ]
 }

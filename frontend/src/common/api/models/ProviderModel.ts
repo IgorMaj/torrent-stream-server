@@ -13,12 +13,12 @@
  */
 
 import { exists, mapValues } from '../runtime'
+import type { ProviderCategoryModel } from './ProviderCategoryModel'
 import {
-    ProviderCategoryModel,
     ProviderCategoryModelFromJSON,
     ProviderCategoryModelFromJSONTyped,
     ProviderCategoryModelToJSON,
-} from './'
+} from './ProviderCategoryModel'
 
 /**
  *
@@ -38,6 +38,17 @@ export interface ProviderModel {
      * @memberof ProviderModel
      */
     categories: Array<ProviderCategoryModel>
+}
+
+/**
+ * Check if a given object implements the ProviderModel interface.
+ */
+export function instanceOfProviderModel(value: object): boolean {
+    let isInstance = true
+    isInstance = isInstance && 'provider' in value
+    isInstance = isInstance && 'categories' in value
+
+    return isInstance
 }
 
 export function ProviderModelFromJSON(json: any): ProviderModel {

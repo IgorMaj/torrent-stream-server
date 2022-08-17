@@ -16,6 +16,7 @@ export interface paths {
   };
   "/api/torrents/{infoHash}": {
     get: operations["getTorrent"];
+    delete: operations["deleteTorrent"];
   };
   "/stream/{torrent}": {
     /** Create a file stream from torrents by `torrent` parameter. By default the biggest file will be returned, but it is possible to select file manually using `file`, `fileType`, `fileIndex` parameters. Endpoint can be protected by passing signed payload with JWT token (`token` parameter). */
@@ -123,13 +124,18 @@ export interface components {
     SuccessModel: {
       success: boolean;
     };
+    /** Server log entry */
     Log: {
+      /** Log message */
       message: string;
+      /** Log timestamp in seconds */
       time: number;
       level: "debug" | "info" | "warn" | "error";
     };
   };
   responses: {
+    /** Ok */
+    200: unknown;
     /** Successful operation */
     204: never;
     /** Bad Request */
@@ -258,6 +264,17 @@ export interface operations {
       401: components["responses"]["401"];
       403: components["responses"]["403"];
       404: components["responses"]["404"];
+    };
+  };
+  deleteTorrent: {
+    parameters: {
+      path: {
+        /** torrent info hash */
+        infoHash: string;
+      };
+    };
+    responses: {
+      200: components["responses"]["200"];
     };
   };
   /** Create a file stream from torrents by `torrent` parameter. By default the biggest file will be returned, but it is possible to select file manually using `file`, `fileType`, `fileIndex` parameters. Endpoint can be protected by passing signed payload with JWT token (`token` parameter). */

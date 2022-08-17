@@ -27,6 +27,16 @@ export interface MagnetModel {
     magnet: string
 }
 
+/**
+ * Check if a given object implements the MagnetModel interface.
+ */
+export function instanceOfMagnetModel(value: object): boolean {
+    let isInstance = true
+    isInstance = isInstance && 'magnet' in value
+
+    return isInstance
+}
+
 export function MagnetModelFromJSON(json: any): MagnetModel {
     return MagnetModelFromJSONTyped(json, false)
 }

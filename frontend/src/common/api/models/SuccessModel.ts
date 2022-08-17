@@ -27,6 +27,16 @@ export interface SuccessModel {
     success: boolean
 }
 
+/**
+ * Check if a given object implements the SuccessModel interface.
+ */
+export function instanceOfSuccessModel(value: object): boolean {
+    let isInstance = true
+    isInstance = isInstance && 'success' in value
+
+    return isInstance
+}
+
 export function SuccessModelFromJSON(json: any): SuccessModel {
     return SuccessModelFromJSONTyped(json, false)
 }

@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { Request, Response, NextFunction, Router } from 'express'
 import YAML from 'yamljs'
 import { resolve } from 'path'
@@ -5,7 +6,11 @@ import { flatMap, filterRecord } from 'common-stuff'
 import type { OpenAPIV3 } from 'express-openapi-validator/dist/framework/types'
 import { stringify } from 'querystring'
 
-import { operations as Operations, paths as Paths, components as Components } from './generated'
+import {
+    operations as Operations,
+    paths as Paths,
+    components as Components,
+} from './generated'
 
 type KeysOfUnion<T> = T extends T ? keyof T : never
 type Operation = keyof Operations
@@ -108,6 +113,9 @@ export function createRouter(routes: Route<any>[]): Router {
         }
         if (cur.method === 'post') {
             return prev.post(url, cur.resolver)
+        }
+        if (cur.method === 'delete') {
+            return prev.delete(url, cur.resolver)
         }
         return prev
     }, Router())

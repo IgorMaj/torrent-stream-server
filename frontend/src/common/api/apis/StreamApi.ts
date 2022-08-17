@@ -13,11 +13,8 @@
  */
 
 import * as runtime from '../runtime'
-import {
-    ApiErrorModel,
-    ApiErrorModelFromJSON,
-    ApiErrorModelToJSON,
-} from '../models'
+import type { ApiErrorModel } from '../models'
+import { ApiErrorModelFromJSON, ApiErrorModelToJSON } from '../models'
 
 export interface GetPlaylistRequest {
     torrent: string
@@ -57,7 +54,8 @@ export class StreamApi extends runtime.BaseAPI {
      * Returns [m3u multimedia playlist](https://en.wikipedia.org/wiki/M3U) of the torrent. Supports same parameters as stream endpoint.
      */
     async getPlaylistRaw(
-        requestParameters: GetPlaylistRequest
+        requestParameters: GetPlaylistRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction
     ): Promise<runtime.ApiResponse<Blob>> {
         if (
             requestParameters.torrent === null ||
@@ -85,15 +83,18 @@ export class StreamApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {}
 
-        const response = await this.request({
-            path: `/playlist/{torrent}`.replace(
-                `{${'torrent'}}`,
-                encodeURIComponent(String(requestParameters.torrent))
-            ),
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        })
+        const response = await this.request(
+            {
+                path: `/playlist/{torrent}`.replace(
+                    `{${'torrent'}}`,
+                    encodeURIComponent(String(requestParameters.torrent))
+                ),
+                method: 'GET',
+                headers: headerParameters,
+                query: queryParameters,
+            },
+            initOverrides
+        )
 
         return new runtime.BlobApiResponse(response)
     }
@@ -101,8 +102,14 @@ export class StreamApi extends runtime.BaseAPI {
     /**
      * Returns [m3u multimedia playlist](https://en.wikipedia.org/wiki/M3U) of the torrent. Supports same parameters as stream endpoint.
      */
-    async getPlaylist(requestParameters: GetPlaylistRequest): Promise<Blob> {
-        const response = await this.getPlaylistRaw(requestParameters)
+    async getPlaylist(
+        requestParameters: GetPlaylistRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction
+    ): Promise<Blob> {
+        const response = await this.getPlaylistRaw(
+            requestParameters,
+            initOverrides
+        )
         return await response.value()
     }
 
@@ -110,7 +117,8 @@ export class StreamApi extends runtime.BaseAPI {
      * Returns [m3u multimedia playlist](https://en.wikipedia.org/wiki/M3U) of the torrent. Supports same parameters as stream endpoint.
      */
     async getPlaylist2Raw(
-        requestParameters: GetPlaylist2Request
+        requestParameters: GetPlaylist2Request,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction
     ): Promise<runtime.ApiResponse<Blob>> {
         if (
             requestParameters.torrent === null ||
@@ -142,12 +150,15 @@ export class StreamApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {}
 
-        const response = await this.request({
-            path: `/playlist`,
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        })
+        const response = await this.request(
+            {
+                path: `/playlist`,
+                method: 'GET',
+                headers: headerParameters,
+                query: queryParameters,
+            },
+            initOverrides
+        )
 
         return new runtime.BlobApiResponse(response)
     }
@@ -155,8 +166,14 @@ export class StreamApi extends runtime.BaseAPI {
     /**
      * Returns [m3u multimedia playlist](https://en.wikipedia.org/wiki/M3U) of the torrent. Supports same parameters as stream endpoint.
      */
-    async getPlaylist2(requestParameters: GetPlaylist2Request): Promise<Blob> {
-        const response = await this.getPlaylist2Raw(requestParameters)
+    async getPlaylist2(
+        requestParameters: GetPlaylist2Request,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction
+    ): Promise<Blob> {
+        const response = await this.getPlaylist2Raw(
+            requestParameters,
+            initOverrides
+        )
         return await response.value()
     }
 
@@ -164,7 +181,8 @@ export class StreamApi extends runtime.BaseAPI {
      * Create a file stream from torrents by `torrent` parameter. By default the biggest file will be returned, but it is possible to select file manually using `file`, `fileType`, `fileIndex` parameters. Endpoint can be protected by passing signed payload with JWT token (`token` parameter).
      */
     async getStreamRaw(
-        requestParameters: GetStreamRequest
+        requestParameters: GetStreamRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction
     ): Promise<runtime.ApiResponse<Blob>> {
         if (
             requestParameters.torrent === null ||
@@ -196,15 +214,18 @@ export class StreamApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {}
 
-        const response = await this.request({
-            path: `/stream/{torrent}`.replace(
-                `{${'torrent'}}`,
-                encodeURIComponent(String(requestParameters.torrent))
-            ),
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        })
+        const response = await this.request(
+            {
+                path: `/stream/{torrent}`.replace(
+                    `{${'torrent'}}`,
+                    encodeURIComponent(String(requestParameters.torrent))
+                ),
+                method: 'GET',
+                headers: headerParameters,
+                query: queryParameters,
+            },
+            initOverrides
+        )
 
         return new runtime.BlobApiResponse(response)
     }
@@ -212,8 +233,14 @@ export class StreamApi extends runtime.BaseAPI {
     /**
      * Create a file stream from torrents by `torrent` parameter. By default the biggest file will be returned, but it is possible to select file manually using `file`, `fileType`, `fileIndex` parameters. Endpoint can be protected by passing signed payload with JWT token (`token` parameter).
      */
-    async getStream(requestParameters: GetStreamRequest): Promise<Blob> {
-        const response = await this.getStreamRaw(requestParameters)
+    async getStream(
+        requestParameters: GetStreamRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction
+    ): Promise<Blob> {
+        const response = await this.getStreamRaw(
+            requestParameters,
+            initOverrides
+        )
         return await response.value()
     }
 
@@ -221,7 +248,8 @@ export class StreamApi extends runtime.BaseAPI {
      * Create a file stream from torrents by `torrent` parameter. By default the biggest file will be returned, but it is possible to select file manually using `file`, `fileType`, `fileIndex` parameters. Endpoint can be protected by passing signed payload with JWT token (`token` parameter).
      */
     async getStream2Raw(
-        requestParameters: GetStream2Request
+        requestParameters: GetStream2Request,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction
     ): Promise<runtime.ApiResponse<Blob>> {
         if (
             requestParameters.torrent === null ||
@@ -257,12 +285,15 @@ export class StreamApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {}
 
-        const response = await this.request({
-            path: `/stream`,
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        })
+        const response = await this.request(
+            {
+                path: `/stream`,
+                method: 'GET',
+                headers: headerParameters,
+                query: queryParameters,
+            },
+            initOverrides
+        )
 
         return new runtime.BlobApiResponse(response)
     }
@@ -270,23 +301,31 @@ export class StreamApi extends runtime.BaseAPI {
     /**
      * Create a file stream from torrents by `torrent` parameter. By default the biggest file will be returned, but it is possible to select file manually using `file`, `fileType`, `fileIndex` parameters. Endpoint can be protected by passing signed payload with JWT token (`token` parameter).
      */
-    async getStream2(requestParameters: GetStream2Request): Promise<Blob> {
-        const response = await this.getStream2Raw(requestParameters)
+    async getStream2(
+        requestParameters: GetStream2Request,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction
+    ): Promise<Blob> {
+        const response = await this.getStream2Raw(
+            requestParameters,
+            initOverrides
+        )
         return await response.value()
     }
 }
 
 /**
  * @export
- * @enum {string}
  */
-export enum GetStreamOutputEnum {
-    Zip = 'zip',
-}
+export const GetStreamOutputEnum = {
+    Zip: 'zip',
+} as const
+export type GetStreamOutputEnum =
+    typeof GetStreamOutputEnum[keyof typeof GetStreamOutputEnum]
 /**
  * @export
- * @enum {string}
  */
-export enum GetStream2OutputEnum {
-    Zip = 'zip',
-}
+export const GetStream2OutputEnum = {
+    Zip: 'zip',
+} as const
+export type GetStream2OutputEnum =
+    typeof GetStream2OutputEnum[keyof typeof GetStream2OutputEnum]
