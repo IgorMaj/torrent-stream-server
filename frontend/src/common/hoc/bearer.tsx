@@ -21,11 +21,14 @@ export function withBearer<T>(
                         setBearerRequired(false)
                     })
                     .catch(async (err) => {
-                        if (String(err).toLowerCase().includes('authorization header required')) {
+                        /*if (String(err).toLowerCase().includes('authorization header required')) {
                             setBearerRequired(true)
                         } else {
                             setError(String(err))
-                        }
+                        }*/
+                        console.log('Check this error, just in case:')
+                        console.log(String(err))
+                        setBearerRequired(true)
                     })
             }
         }, [bearerRequired, setBearerRequired])
