@@ -20,6 +20,7 @@ export const CustomSubtitleSelector = (props: { player: VideoJsPlayer }) => {
                         ? URL.createObjectURL(file)
                         : await convertToVTT(file),
                     mode: 'showing',
+                    label: file?.name ?? 'untitled',
                 },
                 false
             )
