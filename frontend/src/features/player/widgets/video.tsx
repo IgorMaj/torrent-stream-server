@@ -3,6 +3,8 @@ import { Alert } from 'react-bootstrap'
 import isMobile from 'ismobilejs'
 import videojs, { VideoJsPlayer } from 'video.js'
 import { CustomSubtitleSelector } from './subtitle'
+;(videojs as any).Vhs.MAX_GOAL_BUFFER_LENGTH = Infinity
+;(videojs as any).Vhs.GOAL_BUFFER_LENGTH = Infinity
 
 const chromecast = require('@silvermine/videojs-chromecast')
 chromecast(videojs)
