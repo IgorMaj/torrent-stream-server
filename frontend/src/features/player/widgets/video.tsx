@@ -3,6 +3,7 @@ import { Alert } from 'react-bootstrap'
 import isMobile from 'ismobilejs'
 import videojs, { VideoJsPlayer } from 'video.js'
 import { CustomSubtitleSelector } from './subtitle'
+import { useSubtitles } from 'common/hooks/subtitle'
 ;(videojs as any).Vhs.MAX_GOAL_BUFFER_LENGTH = Infinity
 ;(videojs as any).Vhs.GOAL_BUFFER_LENGTH = Infinity
 
@@ -13,6 +14,7 @@ export const VideoPlayerWidget = memo(
     ({ url, type }: { url: string; type: string }) => {
         const device = isMobile(window.navigator)
         const ref = useRef<HTMLVideoElement>(null)
+        const subtitles = useSubtitles()
         const [videoObj, setVideoObj] = React.useState<VideoJsPlayer>()
 
         useEffect(() => {
@@ -47,6 +49,7 @@ export const VideoPlayerWidget = memo(
                 setVideoObj(v)
                 // Skip a bit to load poster
                 v.currentTime(1)
+
                 return () => {
                     v.dispose()
                     setVideoObj(undefined)
@@ -60,7 +63,19 @@ export const VideoPlayerWidget = memo(
                     <video
                         ref={ref}
                         className="video-js vjs-theme-custom vjs-big-play-centered"
-                    ></video>
+                    >
+                        {subtitles.map((sub, index: number) => {
+                            return (
+                                <track
+                                    key={index}
+                                    kind="captions"
+                                    src={sub.src}
+                                    label={sub.name}
+                                    default={index === 0}
+                                />
+                            )
+                        })}
+                    </video>
                 </div>
                 {videoObj && <CustomSubtitleSelector player={videoObj} />}
                 {type === 'video/x-matroska' && (

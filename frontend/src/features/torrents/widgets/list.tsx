@@ -85,6 +85,7 @@ export function TorrentsListWidget({
                                 >
                                     <TorrentsListItemWidget
                                         file={v}
+                                        key={v.path}
                                         torrent={torrent}
                                     />
                                 </ListGroup.Item>
@@ -113,7 +114,7 @@ export function TorrentsListItemWidget({
                             .split('/')
                             .map((part, index, arr) =>
                                 index + 1 < arr.length ? (
-                                    <span className="text-muted">
+                                    <span key={index} className="text-muted">
                                         {part} /{' '}
                                     </span>
                                 ) : (

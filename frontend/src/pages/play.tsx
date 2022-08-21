@@ -9,6 +9,7 @@ import { addHistoryItem } from 'features/history'
 import { TorrentsListWidget, TorrentViewWidget } from 'features/torrents'
 import { withBearer } from 'common/hoc'
 import { ResultContainer } from 'common/layout'
+import SubtitleFilesProvider from 'common/hooks/subtitle'
 
 export default withBearer(({ bearer }) => {
     const location = useLocation()
@@ -53,22 +54,26 @@ function PlayPage({
         () => torrent.result?.files.find((v) => v.path === file),
         [torrent, file]
     )
-
+    const torrentFiles = useMemo(() => torrent.result?.files, [torrent, file])
     return (
         <Container className="mt-3">
-            <ResultContainer result={torrent}>
-                {(result) => (
-                    <>
-                        {torrentFile && (
-                            <TorrentViewWidget
-                                file={torrentFile}
-                                torrent={result}
-                            />
+            {torrentFiles?.length && (
+                <SubtitleFilesProvider files={torrentFiles}>
+                    <ResultContainer result={torrent}>
+                        {(result) => (
+                            <>
+                                {torrentFile && (
+                                    <TorrentViewWidget
+                                        file={torrentFile}
+                                        torrent={result}
+                                    />
+                                )}
+                                <TorrentsListWidget torrent={result} />
+                            </>
                         )}
-                        <TorrentsListWidget torrent={result} />
-                    </>
-                )}
-            </ResultContainer>
+                    </ResultContainer>
+                </SubtitleFilesProvider>
+            )}
         </Container>
     )
 }
